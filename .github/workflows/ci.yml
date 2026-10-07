@@ -1,7 +1,9 @@
 name: Java CI
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -9,5 +11,19 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-          cache: maven
-      - run: mvn -B verify
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build and test all projects
+        run: ./gradlew --no-daemon clean build
+      - name: Check standalone project builds
+        shell: bash
+        run: |
+          for project in 01-ai-qa 02-text-summarizer 03-ticket-triage 04-action-extractor 05-document-qa
+          do
+            (cd "$project" && ./gradlew --no-daemon bootJar)
+          done
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-reports
+          path: '**/build/test-results/test/*.xml'

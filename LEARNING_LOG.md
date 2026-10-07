@@ -13,3 +13,14 @@ Evidence: https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actio
 Next: run each app locally, explain its classes, then evaluate live responses using non-sensitive sample data. No live demo or accuracy benchmark has been completed.
 
 For each genuine milestone record date, project, what changed, what you learned, evidence, and next step.
+
+
+## 2026-10-07 — Gradle conversion and AI documentation
+
+Converted the repository and each standalone project to Gradle 8.14.3 with checked-in Unix/Windows wrappers, a Java 17 toolchain, Spring Boot dependency BOM, and Gradle CI. Removed the Maven POM files. Expanded all five READMEs to explain the actual default model, task-specific technique, Java processing, examples, and limitations.
+
+Wrapper JAR checksum matched Gradle's published value. Gradle CI subsequently built all five applications, passed all 10 tests, and packaged each project independently with `bootJar`.
+
+Evidence: https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/runs/37643306756
+
+Live AI behavior still needs a user-run evaluation with credentials and non-sensitive examples.

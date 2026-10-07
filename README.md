@@ -2,30 +2,77 @@
 
 [![Java CI](https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/workflows/ci.yml/badge.svg)](https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/workflows/ci.yml)
 
-A Java backend developer learning practical AI integration through five small, explainable projects.
+Five small Spring Boot applications exploring practical AI integration in Java. Each is a learning prototype with a labeled no-key demo and a real live-provider path.
 
-| Project | Purpose | AI concept |
-|---|---|---|
-| [AI Q&A](01-ai-qa/README.md) | Explain Java and backend concepts through a stateless question-answer API. | Prompting |
-| [Text Summarizer](02-text-summarizer/README.md) | Turn a supplied article or meeting note into a short summary and action items. | Summarization |
-| [Support Ticket Triage](03-ticket-triage/README.md) | Classify support tickets into a category and priority for human review. | Classification |
-| [Action Item Extractor](04-action-extractor/README.md) | Extract explicitly stated tasks, owners, and deadlines into JSON. | Structured extraction |
-| [Document-grounded Q&A](05-document-qa/README.md) | Retrieve relevant paragraphs from a local knowledge file and answer with source IDs. | Retrieval grounding |
+## Projects and AI techniques
 
-## Start here
+| Project | Purpose | AI technique | Model in live mode |
+|---|---|---|---|
+| [AI Q&A](01-ai-qa/README.md) | Explain Java and backend concepts through a stateless question-answer API. | Instruction prompting and text generation | `gpt-4o-mini` |
+| [Text Summarizer](02-text-summarizer/README.md) | Turn an article or meeting note into a concise summary with only explicitly stated action items. | Text summarization using a constrained instruction | `gpt-4o-mini` |
+| [Support Ticket Triage](03-ticket-triage/README.md) | Suggest a support-ticket category and priority for human review. | Zero-shot classification through an LLM prompt | `gpt-4o-mini` |
+| [Action Item Extractor](04-action-extractor/README.md) | Extract explicitly stated tasks, owners, and deadlines into machine-readable JSON. | Information extraction with prompted JSON output | `gpt-4o-mini` |
+| [Document-grounded Q&A](05-document-qa/README.md) | Retrieve relevant paragraphs from a local knowledge file and generate an answer with source paragraph IDs. | Retrieval-augmented generation (RAG) with lexical retrieval | `gpt-4o-mini` |
 
-Read projects in numerical order. Each directory is a standalone Maven application; root `mvn verify` tests all five. Run one at a time on port 8080, or set PORT. All default to labeled demo mode; live mode uses the provider API. No API key is needed for tests.
+All five use **OpenAI GPT-4o mini by default** through Java's `HttpClient` and the Chat Completions API. `OPENAI_MODEL` changes the requested model. The difference between projects is the task instruction and Java processing. Demo mode runs no AI model. These projects do not use Spring AI, train models, create embeddings, or connect to a vector database. Document Q&A adds lexical retrieval before LLM generation.
 
-## Portfolio approach
+Read each project's README for its input/output examples, code responsibilities, prompt, data flow, model configuration, limitations, and interview walkthrough.
 
-Pin this repository, write a concise description, and use relevant topics: java, spring-boot, ai, llm, retrieval-augmented-generation. Link it from your resume and LinkedIn. Add a short demo recording after running live requests. A readable portfolio supports evaluation; repository activity alone does not guarantee recruiter outreach.
+## Build with Gradle
 
-Treat these as learning prototypes. Record genuine changes and dates in LEARNING_LOG.md. Do not manufacture contributions, backdate commits, or describe generated code as work you have independently mastered. Be able to explain and change every class.
+Prerequisite: JDK 17. Gradle 8.14.3 is pinned by the checked-in wrapper; install no separate Gradle. The distribution checksum is verified and CI validates wrapper JARs.
+
+From the repository root on macOS/Linux:
+
+```bash
+./gradlew clean build
+./gradlew :01-ai-qa:bootRun
+```
+
+From the repository root on Windows PowerShell:
+
+```powershell
+.\gradlew.bat clean build
+.\gradlew.bat :01-ai-qa:bootRun
+```
+
+To work on just one project:
+
+```bash
+cd 03-ticket-triage
+./gradlew test
+./gradlew bootRun
+```
+
+On Windows use `.\gradlew.bat` in that folder. Every folder has its own complete Gradle build, settings file, and wrapper; it can be copied to a separate repository. Root build tasks aggregate all five. The first build requires internet access for Gradle and dependencies.
+
+Executable application JARs are written to `<project>/build/libs/<project>-0.1.0.jar`. Run one using `java -jar` or use `bootRun`. Test reports are under `<project>/build/reports/tests/test/index.html`.
+
+## Run live AI
+
+The default `AI_MODE=demo` uses fixed fixtures. For a live run set `AI_MODE=live`, `OPENAI_API_KEY`, and optionally `OPENAI_MODEL` before starting a project. The per-project READMEs include Bash and PowerShell commands. API keys are never required for tests; live API usage incurs provider charges. Run one application at a time on port 8080 or change `PORT`.
+
+## Build files
+
+- `settings.gradle` includes all five applications in the root build.
+- Root `build.gradle` aggregates `clean`, `test`, and `build` tasks.
+- Each project `build.gradle` uses the Spring Boot 3.5.16 Gradle plugin and the matching dependency BOM, Java 17 toolchain, and JUnit Platform.
+- `gradlew`, `gradlew.bat`, and `gradle/wrapper/` make the Gradle version reproducible.
+- `.github/workflows/ci.yml` validates wrappers, builds/tests all applications, and packages every project independently.
 
 ## Validation status
 
-GitHub Actions ran `mvn -B verify` on Java 17 on 2026-10-07: all five applications built successfully and 10 tests passed (zero failures, errors, or skips). [Validation run](https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/runs/37637378765). Tests cover labeled demo responses and blank-input rejection; they do not measure live model accuracy or provider failure behavior. Live model calls remain untested without credentials.
+On 2026-10-07, GitHub Actions ran `./gradlew --no-daemon clean build`: all five application builds and all 10 tests passed. It also ran `bootJar` from each project folder: all five standalone packages succeeded. Wrapper validation passed. [Gradle validation run](https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/runs/37643306756). Live model calls remain untested without credentials. Tests cover labeled demo responses and blank-input rejection, not model accuracy.
 
-## Reuse
+## Portfolio and future work
 
-See MASTER_PROMPT.md and PROJECT_INSTRUCTIONS.md. The repository prompt is the durable source of instructions for future work.
+Pin this repository, add relevant topics, and link a short demo recording after running real requests. Record genuine learning and code changes in [LEARNING_LOG.md](LEARNING_LOG.md). Treat this as beginner AI integration experience and be able to explain the Java classes.
+
+Use [MASTER_PROMPT.md](MASTER_PROMPT.md) and [PROJECT_INSTRUCTIONS.md](PROJECT_INSTRUCTIONS.md) for future changes. Example: “Using the master prompt, add a beginner semantic-search project with Gradle.”
+
+## Official references
+
+- [Spring Boot 3.5 system requirements](https://docs.spring.io/spring-boot/3.5/system-requirements.html)
+- [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html)
+- [Gradle release checksums](https://gradle.org/release-checksums/)
+- [GPT-4o mini model](https://developers.openai.com/api/docs/models/gpt-4o-mini)
