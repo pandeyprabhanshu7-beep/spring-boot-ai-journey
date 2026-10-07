@@ -1,0 +1,7 @@
+# Resolve and commit a hash-locked requirements file in your own environment.
+# These are API-family constraints, not a tested transitive dependency lock.
+fastapi>=0.115,<1
+pydantic>=2,<3
+httpx>=0.27,<1
+uvicorn>=0.30,<1
+mcp[cli]>=2,<3

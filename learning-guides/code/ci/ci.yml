@@ -1,0 +1,46 @@
+# Copy to .github/workflows/ci.yml at the bundle root to run.
+# Tags are readable examples: replace with reviewed full action SHAs for releases.
+name: atlas-contracts
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: atlas-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  core-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Python retrieval contracts
+        working-directory: code/python
+        run: python -m unittest -v
+      - name: Java retrieval contracts
+        run: java code/java-core/AtlasCore.java
+  java-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: code/spring/pom.xml
+      - name: Compile and package integration example
+        working-directory: code/spring
+        run: mvn -B -ntp verify
+# Publishing, live-model evals and GitOps promotion require environment-specific jobs.
+# This workflow does not claim to run those missing gates.

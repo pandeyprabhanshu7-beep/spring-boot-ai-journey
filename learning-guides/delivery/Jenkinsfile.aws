@@ -1,0 +1,34 @@
+pipeline {
+  agent { label 'trusted-aws-release' }
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+    timeout(time: 30, unit: 'MINUTES')
+  }
+  environment {
+    AWS_REGION = 'us-east-1'
+    AWS_ACCOUNT_ID = '111122223333'
+    ECR_REPOSITORY = 'atlas'
+    LOCAL_IMAGE = 'atlas-ci:candidate'
+  }
+  stages {
+    stage('Checkout') { steps { checkout scm } }
+    stage('Contracts') {
+      steps {
+        sh 'python3 -m unittest discover -s code/python -p "test_*.py"'
+        sh 'java code/java-core/AtlasCore.java'
+      }
+    }
+    stage('Build candidate') {
+      steps {
+        script { env.IMAGE_TAG = sh(script: 'git rev-parse HEAD', returnStdout: true).trim() }
+        sh 'docker build -t "$LOCAL_IMAGE" code/spring'
+      }
+    }
+    stage('Publish') { steps { sh 'bash delivery/publish_aws.sh' } }
+  }
+  post {
+    success { archiveArtifacts artifacts: 'release-image.txt', fingerprint: true }
+    always { deleteDir() }
+  }
+}

@@ -1,0 +1,141 @@
+# Lab template: adapt image/model endpoint; add real authentication before using real data.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: atlas
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: atlas-api
+  namespace: atlas
+automountServiceAccountToken: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: atlas-api
+  namespace: atlas
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  minReadySeconds: 10
+  progressDeadlineSeconds: 300
+  selector:
+    matchLabels:
+      app: atlas-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: atlas-api
+    spec:
+      serviceAccountName: atlas-api
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 45
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: registry.example.com/atlas:REPLACE_WITH_VERIFIED_RELEASE
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SERVER_ADDRESS
+              value: 0.0.0.0
+            - name: OLLAMA_BASE_URL
+              value: http://ollama.atlas.svc.cluster.local:11434
+            - name: CHAT_MODEL
+              value: REPLACE_WITH_INSTALLED_CHAT_MODEL
+            - name: EMBED_MODEL
+              value: REPLACE_WITH_INSTALLED_EMBEDDING_MODEL
+          resources:
+            requests:
+              cpu: 500m
+              memory: 768Mi
+            limits:
+              cpu: "2"
+              memory: 1Gi
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 5
+            failureThreshold: 36
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: temp
+              mountPath: /tmp
+      volumes:
+        - name: temp
+          emptyDir:
+            sizeLimit: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: atlas-api
+  namespace: atlas
+spec:
+  selector:
+    app: atlas-api
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: atlas-api
+  namespace: atlas
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: atlas-api
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: atlas-api
+  namespace: atlas
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: atlas-api
+  minReplicas: 3
+  maxReplicas: 8
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
