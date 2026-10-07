@@ -1,0 +1,18 @@
+plugins {
+    id 'base'
+}
+
+// The root aggregates five independent Spring Boot applications.
+tasks.register('test') {
+    group = 'verification'
+    description = 'Run the tests in all five AI projects.'
+    dependsOn subprojects.collect { "${it.path}:test" }
+}
+
+tasks.named('build') {
+    dependsOn subprojects.collect { "${it.path}:build" }
+}
+
+tasks.named('clean') {
+    dependsOn subprojects.collect { "${it.path}:clean" }
+}
