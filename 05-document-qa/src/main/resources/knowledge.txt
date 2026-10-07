@@ -1,0 +1,5 @@
+Logs are retained for 14 days. Logs must not include secrets.
+
+Deployments require passing integration tests and a rollback plan.
+
+Support hours are Monday to Friday, 9 AM to 5 PM UTC.
