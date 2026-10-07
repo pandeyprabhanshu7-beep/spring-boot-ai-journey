@@ -70,9 +70,21 @@ Pin this repository, add relevant topics, and link a short demo recording after 
 
 Use [MASTER_PROMPT.md](MASTER_PROMPT.md) and [PROJECT_INSTRUCTIONS.md](PROJECT_INSTRUCTIONS.md) for future changes. Example: “Using the master prompt, add a beginner semantic-search project with Gradle.”
 
+
+## Illustrated engineering learning guides
+
+Continue beyond the beginner projects with the [three-guide learning path](learning-guides/README.md):
+
+- [AI platforms, RAG and MCP](learning-guides/01_ai_platform_simple_to_advanced.md): component internals, numerical examples, retrieval, tools and operations.
+- [CI/CD, Kubernetes, AWS and Azure](learning-guides/02_cicd_kubernetes_aws_azure.md): TeamCity/Jenkins examples, identity exchanges, protocols and deployment failure traces.
+- [Spring AI, Python APIs and interview designs](learning-guides/03_spring_ai_python_apis_and_interviews.md): library choices, paired code, resilience and detailed interview answers.
+
+Includes offline HTML readers, 26 illustrations, runnable core labs and a [validation report](learning-guides/VALIDATION.md). Download/clone the repository and open `learning-guides/index.html` for the HTML edition. These are AI-assisted learning references; live cloud and model integrations are explicitly untested. The existing five applications keep their Java 17/Gradle builds.
+
 ## Official references
 
 - [Spring Boot 3.5 system requirements](https://docs.spring.io/spring-boot/3.5/system-requirements.html)
 - [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html)
 - [Gradle release checksums](https://gradle.org/release-checksums/)
 - [GPT-4o mini model](https://developers.openai.com/api/docs/models/gpt-4o-mini)
+

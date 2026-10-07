@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.class
+node_modules/
+.venv/
+target/
+build/
+.gradle/
+.env

@@ -24,3 +24,12 @@ Wrapper JAR checksum matched Gradle's published value. Gradle CI subsequently bu
 Evidence: https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/runs/37643306756
 
 Live AI behavior still needs a user-run evaluation with credentials and non-sensitive examples.
+
+## 2026-10-07 — Illustrated engineering reference guides
+
+Added three AI-assisted learning references covering AI platforms/RAG/MCP, CI/CD/Kubernetes/AWS/Azure, and Spring AI/Python APIs/interviews. Each has Markdown and self-contained HTML editions, original diagrams, worked examples, source links and explicit implementation boundaries.
+
+Local guide checks passed: 21 Python tests, 19 Java checks, five Bash syntax checks, structured-example parsing, image references and HTML anchors. This records artifact creation and deterministic checks, not personal mastery or a live production deployment. See [learning path](learning-guides/README.md) and [validation report](learning-guides/VALIDATION.md).
+
+Next: run the attention example, explain one complete request trace, then reproduce a failure scenario from each guide.
+

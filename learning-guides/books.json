@@ -1,0 +1,17 @@
+[
+  {
+    "name": "01_ai_platform_simple_to_advanced",
+    "title": "AI Platform Engineering: RAG, MCP, Inference and Production Architecture",
+    "subtitle": "Design evidence, inference, tools and releases as one dependable platform."
+  },
+  {
+    "name": "02_cicd_kubernetes_aws_azure",
+    "title": "CI/CD and Kubernetes: AWS, Azure, TeamCity, Jenkins and Delivery Protocols",
+    "subtitle": "Trace every credential, request and artifact from source commit to running workload."
+  },
+  {
+    "name": "03_spring_ai_python_apis_and_interviews",
+    "title": "Spring AI and Python APIs: Paired Implementations and Interview Workbook",
+    "subtitle": "Build and explain model APIs, retrieval, tools, streaming and recoverable jobs."
+  }
+]
