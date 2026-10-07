@@ -62,7 +62,7 @@ The default `AI_MODE=demo` uses fixed fixtures. For a live run set `AI_MODE=live
 
 ## Validation status
 
-The earlier Maven setup passed five application builds and 10 tests on 2026-10-07. That is historical evidence, not verification of this Gradle migration. Gradle CI verification is pending for the current change. Live model calls remain untested without credentials. Tests currently cover labeled demo responses and blank-input rejection, not model accuracy.
+On 2026-10-07, GitHub Actions ran `./gradlew --no-daemon clean build`: all five application builds and all 10 tests passed. It also ran `bootJar` from each project folder: all five standalone packages succeeded. Wrapper validation passed. [Gradle validation run](https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/runs/37643306756). Live model calls remain untested without credentials. Tests cover labeled demo responses and blank-input rejection, not model accuracy.
 
 ## Portfolio and future work
 
