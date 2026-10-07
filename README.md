@@ -1,5 +1,7 @@
 # Spring Boot AI Journey
 
+[![Java CI](https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/workflows/ci.yml/badge.svg)](https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/workflows/ci.yml)
+
 A Java backend developer learning practical AI integration through five small, explainable projects.
 
 | Project | Purpose | AI concept |
@@ -22,7 +24,7 @@ Treat these as learning prototypes. Record genuine changes and dates in LEARNING
 
 ## Validation status
 
-Java 17 is available in the creation environment, but Maven is unavailable. Builds and JUnit tests have not been executed here. CI is included to run `mvn verify` after pushing. Live model behavior has not been tested without credentials.
+GitHub Actions ran `mvn -B verify` on Java 17 on 2026-10-07: all five applications built successfully and 10 tests passed (zero failures, errors, or skips). [Validation run](https://github.com/pandeyprabhanshu7-beep/spring-boot-ai-journey/actions/runs/37637378765). Tests cover labeled demo responses and blank-input rejection; they do not measure live model accuracy or provider failure behavior. Live model calls remain untested without credentials.
 
 ## Reuse
 
